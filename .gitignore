@@ -1,0 +1,6 @@
+venv
+utils/__pycache__
+utils/__init__.py
+firebase-credentials.json
+LunchSNS.code-workspace
+.DS_Store
