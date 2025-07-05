@@ -19,33 +19,47 @@ def initialize_firestore():
     if _db_initialized:
         return
 
-    # Streamlit CloudのSecretsを使用する場合
-    if 'FIREBASE_CREDENTIALS' in os.environ:
-        creds_json = json.loads(os.environ['FIREBASE_CREDENTIALS'])
-        cred = credentials.Certificate(creds_json)
-    # ローカルのJSONファイルを使用する場合
-    else:
-        cred = credentials.Certificate("firebase-credentials.json")
-
-    # ▼▼▼▼▼ ここから修正 ▼▼▼▼▼
-    # プロジェクトIDを取得
-    project_id = cred.project_id
+    import base64 # base64をインポート
     
-    # !!!! 実際のバケット名に合わせてドメインを修正 !!!!
-    # ".appspot.com" ではなく、コンソールで確認した ".firebasestorage.app" を使用
-    bucket_name = f'{project_id}.firebasestorage.app'
+    try:    
+        # Streamlit CloudのSecretsを使用する場合
+        if 'FIREBASE_CREDENTIALS' in os.environ:
+            # creds_json = json.loads(os.environ['FIREBASE_CREDENTIALS'])
+            # cred = credentials.Certificate(creds_json)
+            b64_creds = os.environ['FIREBASE_CREDENTIALS']
+            decoded_creds = base64.b64decode(b64_creds)
+            creds_json = json.loads(decoded_creds)
+            cred = credentials.Certificate(creds_json)
+        # ローカルのJSONファイルを使用する場合
+        else:
+            cred = credentials.Certificate("firebase-credentials.json")
 
-    # アプリの初期化
-    firebase_admin.initialize_app(cred, {
-        'storageBucket': bucket_name
-    })
+        # ▼▼▼▼▼ ここから修正 ▼▼▼▼▼
+        # プロジェクトIDを取得
+        project_id = cred.project_id
     
-    db = firestore.client()
-    # バケット名を明示的に指定して取得する
-    bucket = storage.bucket(name=bucket_name) 
-    _db_initialized = True
-    print(f"Firebase initialized. Using bucket: {bucket_name}") # 確認用のログを更新
-    # ▲▲▲▲▲ ここまで修正 ▲▲▲▲▲
+        # !!!! 実際のバケット名に合わせてドメインを修正 !!!!
+        # ".appspot.com" ではなく、コンソールで確認した ".firebasestorage.app" を使用
+        bucket_name = f'{project_id}.firebasestorage.app'
+
+        # アプリの初期化
+        firebase_admin.initialize_app(cred, {
+            'storageBucket': bucket_name
+        })
+    
+        db = firestore.client()
+        # バケット名を明示的に指定して取得する
+        bucket = storage.bucket(name=bucket_name) 
+        _db_initialized = True
+        print(f"Firebase initialized. Using bucket: {bucket_name}") # 確認用のログを更新
+        # ▲▲▲▲▲ ここまで修正 ▲▲▲▲▲
+        
+    except Exception as e:
+        print(f"!!!!!!!!!! FIREBASE INITIALIZATION FAILED !!!!!!!!!!")
+        print(f"Error: {e}")
+        # エラー時にもアプリが停止しないように、ダミーの値を設定するなどしても良いが、
+        # ここではエラーを明確にするためにraiseする
+        raise e
 
 # --- Helper Functions ---
 def _doc_to_dict(doc):
