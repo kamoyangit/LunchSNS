@@ -1,3 +1,38 @@
+import streamlit as st
+import os
+import json
+
+# --- ▼▼▼▼▼ ここからデバッグ用コード（問題解決後に削除） ▼▼▼▼▼ ---
+def debug_secrets():
+    st.set_page_config(layout="wide")
+    st.title("Secrets デバッグページ")
+    st.warning("このページはデバッグ専用です。問題解決後はこのデバッグコードを削除してください。")
+
+    if 'FIREBASE_CREDENTIALS' in os.environ:
+        st.success("✅ Secretsに `FIREBASE_CREDENTIALS` が見つかりました。")
+        secret_content = os.environ['FIREBASE_CREDENTIALS']
+        st.text_area("↓↓↓ os.environ['FIREBASE_CREDENTIALS'] の実際の中身（この内容をすべてコピーしてください）↓↓↓", secret_content, height=400)
+        
+        try:
+            # JSONとしてパースできるか試す
+            json.loads(secret_content)
+            st.success("✅ JSONとして正常にパースできました。")
+            st.info("もしJSONとしてパースできているのにエラーが起きる場合、他の問題が考えられます。")
+        except json.JSONDecodeError as e:
+            st.error(f"❌ JSONとしてパースできませんでした。これがエラーの直接的な原因です。")
+            st.code(f"エラー内容: {e}", language="bash")
+    else:
+        st.error("❌ Secretsに `FIREBASE_CREDENTIALS` が見つかりません。")
+        st.info("Secretsのキー名が `FIREBASE_CREDENTIALS` になっているか、もう一度確認してください。")
+    
+    # この行で、これ以降の通常のアプリのコードが実行されるのを停止します
+    st.stop()
+
+# デバッグを実行
+debug_secrets()
+# --- ▲▲▲▲▲ ここまでデバッグ用コード ▲▲▲▲▲ ---
+
+
 # app.py
 import streamlit as st
 from pathlib import Path
