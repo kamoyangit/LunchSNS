@@ -11,7 +11,7 @@ from streamlit_cookies_manager import CookieManager # 追加
 
 # --- デバッグフラグ ---
 # ここをTrue/Falseで切り替える
-DEBUG = False
+DEBUG = os.environ.get('DEBUG_OPTION')
 # --------------------
 
 # --- 定数 ---
