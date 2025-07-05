@@ -513,4 +513,6 @@ elif st.session_state.page == "管理者ダッシュボード":
         draw_dashboard()
     else:
         st.error("このページへのアクセス権限がありません。")
-        st.page_link("app.py", label="タイムラインに戻る", icon="🏠")
+        # st.page_link("app.py", label="タイムラインに戻る", icon="🏠")
+        # st.page_linkの代わりに、st.markdownでHTMLリンクを作成
+        st.markdown('<a href="/" target="_self">🏠 タイムラインに戻る</a>', unsafe_allow_html=True)
