@@ -8,6 +8,7 @@ import os
 import datetime # 追加
 import pytz     # 追加
 from streamlit_cookies_manager import CookieManager # 追加
+from zoneinfo import ZoneInfo
 
 # --- デバッグフラグ ---
 # ここをTrue/Falseで切り替える
@@ -60,7 +61,11 @@ if not st.session_state.logged_in:
 
 # --- ヘルパー関数 ---
 def is_lunch_time():
-    jst = pytz.timezone('Asia/Tokyo')
+    # ローカルだと上手くいくが、Streamlit.ioにデプロイするとNG
+    # jst = pytz.timezone('Asia/Tokyo')
+    # now_jst = datetime.datetime.now(jst).time()
+    # zoneifoを使う方法
+    jst = ZoneInfo("Asia/Tokyo")
     now_jst = datetime.datetime.now(jst).time()
     start_time = datetime.time(11, 0)
     end_time = datetime.time(14, 0)
