@@ -12,7 +12,7 @@ from zoneinfo import ZoneInfo
 
 # --- デバッグフラグ ---
 # ここをTrue/Falseで切り替える
-DEBUG = os.environ.get('DEBUG_OPTION', False)
+DEBUG = os.environ.get('DEBUG_OPTION')
 # --------------------
 
 # --- 定数 ---
