@@ -69,7 +69,7 @@ def is_lunch_time():
     now_jst = datetime.datetime.now(jst).time()
     start_time = datetime.time(11, 0)
     end_time = datetime.time(14, 0)
-    if DEBUG:
+    if DEBUG == "True":
         return True
     else :
         return start_time <= now_jst < end_time
