@@ -168,8 +168,8 @@ def draw_post_form():
             if not comment or uploaded_file is None:
                 st.warning("コメントと写真のアップロードは必須です。")
             else:
-                if uploaded_file.size > 2 * 1024 * 1024:
-                    st.error("ファイルサイズが大きすぎます。2MB以下の画像をアップロードしてください。")
+                if uploaded_file.size > 5 * 1024 * 1024:
+                    st.error("ファイルサイズが大きすぎます。5MB以下の画像をアップロードしてください。")
                 else:
                     # ▼▼▼▼▼ 画像アップロード処理をFirebase Cloud Storageに変更 ▼▼▼▼▼
                     ext = Path(uploaded_file.name).suffix
